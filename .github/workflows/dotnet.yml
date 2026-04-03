@@ -130,17 +130,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create tag (to set version)
-        if: ${{ github.event.inputs.version != '' && github.actor == 'Bia10' }}
-        run: git tag v${{ github.event.inputs.version }}
-
       - name: Setup .NET
         uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
         with:
           global-json-file: global.json
 
-      - name: Pack NuGet package
-        run: dotnet pack -c Release --output ${{ env.NuGetDirectory }}
+      - name: Pack NuGet packages
+        shell: bash
+        run: |
+          VERSION_OVERRIDE="${{ github.event.inputs.version }}"
+          if [[ -n "$VERSION_OVERRIDE" ]]; then
+            dotnet pack -c Release --output "${{ env.NuGetDirectory }}" "-p:MinVerVersionOverride=$VERSION_OVERRIDE"
+          else
+            dotnet pack -c Release --output "${{ env.NuGetDirectory }}"
+          fi
 
       - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
@@ -187,3 +190,11 @@ jobs:
           fi
           dotnet nuget push "${{ env.NuGetDirectory }}"/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           dotnet nuget push "${{ env.NuGetDirectory }}"/*.snupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create and push release tag
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a v${{ github.event.inputs.version }} -m "Release v${{ github.event.inputs.version }}"
+          git push origin v${{ github.event.inputs.version }}
