@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup Label="Testing">
-        <PackageVersion Include="coverlet.collector" Version="6.0.4" />
         <PackageVersion Include="TUnit" Version="1.19.16" />
     </ItemGroup>
 

@@ -1,13 +1,20 @@
 {
-    "version": 1,
-    "isRoot": true,
-    "tools": {
-        "csharpier": {
-            "version": "1.2.6",
-            "commands": [
-                "csharpier"
-            ],
-            "rollForward": false
-        }
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "csharpier": {
+      "version": "1.2.6",
+      "commands": [
+        "csharpier"
+      ],
+      "rollForward": false
+    },
+    "dotnet-coverage": {
+      "version": "18.5.2",
+      "commands": [
+        "dotnet-coverage"
+      ],
+      "rollForward": false
     }
+  }
 }
