@@ -1,4 +1,4 @@
-namespace Bia.LogViewer.Core;
+﻿namespace Bia.LogViewer.Core;
 
 public interface IClipboardService
 {

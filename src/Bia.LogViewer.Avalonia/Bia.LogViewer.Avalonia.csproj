@@ -3,10 +3,12 @@
         <IsPackable>true</IsPackable>
         <Description>Reusable Avalonia log viewer control with filtering for .NET applications</Description>
         <PackageTags>avalonia;logging;logviewer;control;ui</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="../../LICENSE" Pack="true" PackagePath="\" />
+        <None Include="../../README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -15,6 +17,7 @@
         <PackageReference Include="Material.Icons.Avalonia" />
         <PackageReference Include="ObservableCollections" />
         <PackageReference Include="SukiUI" />
+        <PackageReference Include="Xaml.Behaviors.Interactivity" />
     </ItemGroup>
 
     <ItemGroup>

@@ -3,6 +3,8 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:behaviours="clr-namespace:Bia.LogViewer.Avalonia.Behaviours"
+    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Xaml.Behaviors.Interactivity"
     xmlns:logViewer="clr-namespace:Bia.LogViewer.Avalonia"
     xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
     x:DataType="logViewer:LogViewerViewModel">
@@ -154,6 +156,11 @@
                 IsReadOnly="True"
                 ItemsSource="{Binding FilteredEntries}"
                 SelectedItem="{Binding SelectedLogItem}">
+                <i:Interaction.Behaviors>
+                    <behaviours:DataGridAutoScrollBehavior
+                        AutoScroll="{Binding AutoScroll}"
+                        Items="{Binding FilteredEntries}" />
+                </i:Interaction.Behaviors>
                 <DataGrid.Columns>
                     <DataGridTextColumn
                         Width="115"
