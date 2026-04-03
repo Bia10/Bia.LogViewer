@@ -1,0 +1,184 @@
+<UserControl
+    x:Class="Bia.LogViewer.Avalonia.LogViewerControl"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+    xmlns:logViewer="clr-namespace:Bia.LogViewer.Avalonia"
+    xmlns:suki="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+    x:DataType="logViewer:LogViewerViewModel">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="LogWarningBrush">#FFA726</SolidColorBrush>
+        <SolidColorBrush x:Key="LogErrorBrush">#8B0000</SolidColorBrush>
+        <SolidColorBrush x:Key="LogCriticalBrush">#FF1744</SolidColorBrush>
+    </UserControl.Resources>
+
+    <!--  Row 0 = filter + behavior bar (auto height)   -->
+    <!--  Row 1 = log DataGrid (fills remaining height) -->
+    <Grid RowDefinitions="Auto, *">
+
+        <!--  Top Section: Filters and Behaviors  -->
+        <StackPanel
+            Grid.Row="0"
+            Margin="10,8,10,4"
+            Orientation="Horizontal"
+            Spacing="12">
+
+            <!--  Filters Group  -->
+            <suki:GroupBox Header="Filters">
+                <StackPanel
+                    Margin="4,2"
+                    Orientation="Horizontal"
+                    Spacing="12">
+
+                    <!--  Information  -->
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon
+                            Width="16"
+                            Height="16"
+                            Foreground="{DynamicResource SukiPrimaryColor}"
+                            Kind="InformationCircle" />
+                        <TextBlock FontSize="12" Text="Info" VerticalAlignment="Center" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource SukiLowText}"
+                            Text="{Binding MessagesCount}"
+                            VerticalAlignment="Center" />
+                        <CheckBox IsChecked="{Binding IsInformationSelected, Mode=TwoWay}" ToolTip.Tip="Toggle Info messages" />
+                    </StackPanel>
+
+                    <Rectangle
+                        Width="1"
+                        Fill="{DynamicResource SukiLowText}"
+                        Opacity="0.25"
+                        VerticalAlignment="Stretch" />
+
+                    <!--  Warning  -->
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon
+                            Width="16"
+                            Height="16"
+                            Foreground="{StaticResource LogWarningBrush}"
+                            Kind="AlertCircle" />
+                        <TextBlock FontSize="12" Text="Warning" VerticalAlignment="Center" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource SukiLowText}"
+                            Text="{Binding WarningsCount}"
+                            VerticalAlignment="Center" />
+                        <CheckBox IsChecked="{Binding IsWarningSelected, Mode=TwoWay}" ToolTip.Tip="Toggle Warning messages" />
+                    </StackPanel>
+
+                    <Rectangle
+                        Width="1"
+                        Fill="{DynamicResource SukiLowText}"
+                        Opacity="0.25"
+                        VerticalAlignment="Stretch" />
+
+                    <!--  Error  -->
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon
+                            Width="16"
+                            Height="16"
+                            Foreground="{StaticResource LogErrorBrush}"
+                            Kind="AlertOctagon" />
+                        <TextBlock FontSize="12" Text="Error" VerticalAlignment="Center" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource SukiLowText}"
+                            Text="{Binding ErrorsCount}"
+                            VerticalAlignment="Center" />
+                        <CheckBox IsChecked="{Binding IsErrorSelected, Mode=TwoWay}" ToolTip.Tip="Toggle Error messages" />
+                    </StackPanel>
+
+                    <Rectangle
+                        Width="1"
+                        Fill="{DynamicResource SukiLowText}"
+                        Opacity="0.25"
+                        VerticalAlignment="Stretch" />
+
+                    <!--  Critical  -->
+                    <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                        <avalonia:MaterialIcon
+                            Width="16"
+                            Height="16"
+                            Foreground="{StaticResource LogCriticalBrush}"
+                            Kind="CrossCircle" />
+                        <TextBlock FontSize="12" Text="Critical" VerticalAlignment="Center" />
+                        <TextBlock
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="{DynamicResource SukiLowText}"
+                            Text="{Binding CriticalCount}"
+                            VerticalAlignment="Center" />
+                        <CheckBox IsChecked="{Binding IsCriticalSelected, Mode=TwoWay}" ToolTip.Tip="Toggle Critical messages" />
+                    </StackPanel>
+
+                </StackPanel>
+            </suki:GroupBox>
+
+            <!--  Behaviors Group  -->
+            <suki:GroupBox Header="Behaviors">
+                <StackPanel
+                    Margin="4,2"
+                    Orientation="Horizontal"
+                    Spacing="15">
+                    <CheckBox
+                        Content="Auto Scroll"
+                        FontSize="12"
+                        IsChecked="{Binding AutoScroll}" />
+                    <CheckBox
+                        Content="Copy on Select"
+                        FontSize="12"
+                        IsChecked="{Binding CopyOnSelect}" />
+                </StackPanel>
+            </suki:GroupBox>
+
+        </StackPanel>
+
+        <!--
+            Log Section — fills all remaining height (Row 1 = *).
+            DataGrid handles its own scrollbars internally.
+        -->
+        <suki:GroupBox
+            Grid.Row="1"
+            Margin="10,0,10,10"
+            Header="Log">
+            <DataGrid
+                Name="LogDataGrid"
+                Margin="0,4,0,0"
+                GridLinesVisibility="None"
+                IsReadOnly="True"
+                ItemsSource="{Binding FilteredEntries}"
+                SelectedItem="{Binding SelectedLogItem}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="115"
+                        Binding="{Binding Timestamp, StringFormat=HH:mm:ss.fff}"
+                        Header="Time" />
+                    <DataGridTextColumn
+                        Width="90"
+                        Binding="{Binding LogLevel}"
+                        Header="Level" />
+                    <DataGridTextColumn
+                        Width="160"
+                        Binding="{Binding EventId}"
+                        Header="Event" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Message}"
+                        ClipboardContentBinding=""
+                        Header="Message" />
+                    <DataGridTextColumn
+                        Width="350"
+                        Binding="{Binding Exception}"
+                        Header="Exception" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </suki:GroupBox>
+
+    </Grid>
+</UserControl>

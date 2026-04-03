@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <Description>Reusable Avalonia log viewer control with filtering for .NET applications</Description>
+        <PackageTags>avalonia;logging;logviewer;control;ui</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../LICENSE" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="Material.Icons.Avalonia" />
+        <PackageReference Include="ObservableCollections" />
+        <PackageReference Include="SukiUI" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Bia.LogViewer.Core\Bia.LogViewer.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MinVer">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

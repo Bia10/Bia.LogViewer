@@ -1,0 +1,35 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+
+    <ItemGroup Label="Avalonia">
+        <PackageVersion Include="Avalonia" Version="11.3.12" />
+        <PackageVersion Include="Material.Icons.Avalonia" Version="3.0.0" />
+        <PackageVersion Include="SukiUI" Version="6.0.3" />
+    </ItemGroup>
+
+    <ItemGroup Label="CommunityToolkit">
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    </ItemGroup>
+
+    <ItemGroup Label="Microsoft">
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.3" />
+    </ItemGroup>
+
+    <ItemGroup Label="Other">
+        <PackageVersion Include="ObservableCollections" Version="3.3.4" />
+    </ItemGroup>
+
+    <ItemGroup Label="Analyzers">
+        <PackageVersion Include="Meziantou.Analyzer" Version="3.0.20" />
+    </ItemGroup>
+
+    <ItemGroup Label="Testing">
+        <PackageVersion Include="TUnit" Version="1.19.16" />
+    </ItemGroup>
+
+    <ItemGroup Label="Versioning">
+        <PackageVersion Include="MinVer" Version="6.1.0" />
+    </ItemGroup>
+</Project>
