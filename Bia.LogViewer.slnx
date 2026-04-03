@@ -1,0 +1,5 @@
+<Solution>
+    <Project Path="src/Bia.LogViewer.Core/Bia.LogViewer.Core.csproj" />
+    <Project Path="src/Bia.LogViewer.Avalonia/Bia.LogViewer.Avalonia.csproj" />
+    <Project Path="src/Bia.LogViewer.Core.Test/Bia.LogViewer.Core.Test.csproj" />
+</Solution>

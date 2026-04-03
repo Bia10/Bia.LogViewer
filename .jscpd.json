@@ -1,0 +1,5 @@
+{
+  "threshold": 5,
+  "ignore": ["**/bin/**", "**/obj/**", "**/artifacts/**"],
+  "absolute": true
+}
