@@ -146,8 +146,7 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
     /// Returns <see langword="true"/> when <paramref name="entry"/> matches the active level mask.
     /// When no levels are selected (<see cref="_levelMask"/> == 0) every entry passes.
     /// </summary>
-    private bool PassesFilter(LogModel entry) =>
-        _levelMask == 0 || (_levelMask & (1 << (int)entry.LogLevel)) != 0;
+    private bool PassesFilter(LogModel entry) => _levelMask == 0 || (_levelMask & (1 << (int)entry.LogLevel)) != 0;
 
     private bool HasLevelFlag(LogLevel level) => (_levelMask & (1 << (int)level)) != 0;
 
