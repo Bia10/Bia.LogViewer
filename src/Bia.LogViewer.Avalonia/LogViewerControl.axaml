@@ -154,12 +154,12 @@
                 Margin="0,4,0,0"
                 GridLinesVisibility="None"
                 IsReadOnly="True"
-                ItemsSource="{Binding FilteredEntries}"
+                ItemsSource="{Binding FilteredView}"
                 SelectedItem="{Binding SelectedLogItem}">
                 <i:Interaction.Behaviors>
                     <behaviours:DataGridAutoScrollBehavior
                         AutoScroll="{Binding AutoScroll}"
-                        Items="{Binding FilteredEntries}" />
+                        Items="{Binding FilteredView}" />
                 </i:Interaction.Behaviors>
                 <DataGrid.Columns>
                     <DataGridTextColumn
