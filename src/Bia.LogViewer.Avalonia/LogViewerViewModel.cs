@@ -34,8 +34,9 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private int _criticalCount;
 
-    [ObservableProperty]
-    private ObservableList<LogModel>? _filteredEntries;
+    private ISynchronizedView<LogModel, LogModel>? _filteredView;
+
+    public INotifyCollectionChangedSynchronizedViewList<LogModel>? FilteredView { get; private set; }
 
     public bool IsInformationSelected
     {
@@ -77,7 +78,10 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
             _levelCounts[(int)entry.LogLevel]++;
 
         SyncCountProperties();
-        RebuildFilteredList();
+
+        _filteredView = _entries.CreateView(static entry => entry);
+        _filteredView.AttachFilter(PassesFilter);
+        FilteredView = _filteredView.ToNotifyCollectionChanged();
 
         _entries.CollectionChanged += OnLogCollectionChanged;
     }
@@ -111,15 +115,12 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
                 var item = e.NewItem;
                 _levelCounts[(int)item.LogLevel]++;
                 SyncCountProperties();
-
-                if (_levelMask == 0 || (_levelMask & (1 << (int)item.LogLevel)) != 0)
-                    FilteredEntries?.Add(item);
                 break;
 
             case NotifyCollectionChangedAction.Reset:
                 Array.Clear(_levelCounts, 0, _levelCounts.Length);
                 SyncCountProperties();
-                RebuildFilteredList();
+                _filteredView?.AttachFilter(PassesFilter);
                 break;
         }
     }
@@ -138,45 +139,15 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(IsWarningSelected));
         OnPropertyChanged(nameof(IsErrorSelected));
         OnPropertyChanged(nameof(IsCriticalSelected));
-        RebuildFilteredList();
+        _filteredView?.AttachFilter(PassesFilter);
     }
 
     /// <summary>
-    /// Rebuilds the filtered list from the source entries.
-    /// Allocates one <see cref="ObservableList{T}"/> per call — unavoidable since
-    /// the DataGrid is bound to it. The intermediate array is sized exactly to avoid
-    /// list-resize copies.
+    /// Returns <see langword="true"/> when <paramref name="entry"/> matches the active level mask.
+    /// When no levels are selected (<see cref="_levelMask"/> == 0) every entry passes.
     /// </summary>
-    private void RebuildFilteredList()
-    {
-        if (_entries is null)
-            return;
-
-        if (_levelMask == 0)
-        {
-            // No filter — shallow copy; single array allocation sized to count.
-            FilteredEntries = new ObservableList<LogModel>(_entries);
-            return;
-        }
-
-        // Pre-count matching entries to allocate the exact capacity — zero resizes.
-        var count = 0;
-        foreach (var entry in _entries)
-        {
-            if ((_levelMask & (1 << (int)entry.LogLevel)) != 0)
-                count++;
-        }
-
-        var buffer = new LogModel[count];
-        var idx = 0;
-        foreach (var entry in _entries)
-        {
-            if ((_levelMask & (1 << (int)entry.LogLevel)) != 0)
-                buffer[idx++] = entry;
-        }
-
-        FilteredEntries = new ObservableList<LogModel>(buffer);
-    }
+    private bool PassesFilter(LogModel entry) =>
+        _levelMask == 0 || (_levelMask & (1 << (int)entry.LogLevel)) != 0;
 
     private bool HasLevelFlag(LogLevel level) => (_levelMask & (1 << (int)level)) != 0;
 
@@ -197,7 +168,7 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(IsWarningSelected));
         OnPropertyChanged(nameof(IsErrorSelected));
         OnPropertyChanged(nameof(IsCriticalSelected));
-        RebuildFilteredList();
+        _filteredView?.AttachFilter(PassesFilter);
     }
 
     private void SyncCountProperties()
@@ -216,5 +187,8 @@ public sealed partial class LogViewerViewModel : ObservableObject, IDisposable
 
         if (_entries is not null)
             _entries.CollectionChanged -= OnLogCollectionChanged;
+
+        _filteredView?.Dispose();
+        FilteredView?.Dispose();
     }
 }
